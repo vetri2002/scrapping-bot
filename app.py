@@ -18,7 +18,6 @@ def index():
         __data = f.readlines()
     __listdata = []
     for line in __data:
-        # for item in line.strip().split():
         __listdata.append(line)
     print(__listdata)
     return render_template("app.html")
@@ -45,17 +44,11 @@ def get_response():
 def get_bot_response(input):
     global __data
     global __listdata
-
-     #Append the query to the sentences list
     __listdata.append(input)
-    #Create the sentences vector based on the list
     vectorizer = TfidfVectorizer()
     sentences_vectors = vectorizer.fit_transform(__listdata)
-    
-    #Measure the cosine similarity and take the second closest index because the first index is the user query
     vector_values = cosine_similarity(sentences_vectors[-1], sentences_vectors)
     answer = __listdata[vector_values.argsort()[0][-2]]
-    #Final check to make sure there are result present. If all the result are 0, means the text input by us are not captured in the corpus
     input_check = vector_values.flatten()
     input_check.sort()
     
@@ -66,5 +59,4 @@ def get_bot_response(input):
 
 
 if __name__ =="__main__":
-    # load_artifacts()
     app.run()
